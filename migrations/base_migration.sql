@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL,
+    email VARCHAR NOT NULL,
+    name VARCHAR NULL,
+    surname VARCHAR NULL,
+    patronymic VARCHAR NULL
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    author VARCHAR NULL,
+    message VARCHAR NOT NULL,
+    FOREIGN KEY (author) REFERENCES Users(login)
+);
