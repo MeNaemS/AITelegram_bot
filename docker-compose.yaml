@@ -4,7 +4,7 @@ services:
     container_name: QwenPostgres
     restart: always
     environment:
-      POSTGRES_USER: MeNaemS
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: users_info
     ports:
@@ -19,7 +19,7 @@ services:
     container_name: qwen_pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - "5050:80"
