@@ -40,3 +40,7 @@ class ChatParameters(BaseModel):
 
 class Response(BaseModel):
     response: str
+
+
+class Model(BaseModel):
+    name: str

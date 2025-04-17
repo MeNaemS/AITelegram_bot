@@ -17,14 +17,8 @@ class DB:
 
 
 @dataclass(slots=True)
-class OpenAI:
-    api_key: str
-
-
-@dataclass(slots=True)
 class API:
     db: DB
-    openai: OpenAI
 
 
 @dataclass(slots=True)
