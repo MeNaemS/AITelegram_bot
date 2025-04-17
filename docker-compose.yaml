@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17.4
-    container_name: QwenPostgres
+    container_name: AIPostgres
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -12,11 +12,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - QwenBotNetwork
+      - AIBotNetwork
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: qwen_pgadmin
+    container_name: ai_pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
@@ -26,14 +26,44 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
-      - QwenBotNetwork
+      - AIBotNetwork
     depends_on:
       - postgres
+      
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ai_ollama
+  #   restart: always
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #     - ./ollama-init.sh:/ollama-init.sh
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+  #       limits:
+  #         memory: 4G
+  #   environment:
+  #     - NVIDIA_VISIBLE_DEVICES=all
+  #     - OLLAMA_HOST=0.0.0.0
+  #     - OLLAMA_MODELS=llama3:8b,qwen2.5
+  #     - CUDA_VISIBLE_DEVICES=0
+  #     - OLLAMA_GPU_LAYERS=20
+  #     - OLLAMA_CUDA_MEMORY_LIMIT=4096
+  #   entrypoint: ["/bin/sh", "/ollama-init.sh"]
+  #   networks:
+  #     - AIBotNetwork
 
 networks:
-  QwenBotNetwork:
+  AIBotNetwork:
     driver: bridge
 
 volumes:
   postgres_data:
   pgadmin_data:
+  ollama_data:

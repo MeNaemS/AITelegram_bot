@@ -67,13 +67,17 @@ async def current_user(
         headers={"WWW-Authenticate": "Bearer"} 
     )
     try:
-        token: UserInToken = await JWTToken.decode_token(token, jwt_info)
-        if token.model_dump().get("username") is None:
+        decoded_token: UserInToken = await JWTToken.decode_token(token, jwt_info)
+        if decoded_token.model_dump().get("username") is None:
             raise token_exception
+        if "expires_delta" in decoded_token.model_dump():
+            expiration_time = datetime.fromisoformat(decoded_token.expires_delta)
+            if datetime.now() > expiration_time:
+                raise token_exception
     except jwt.InvalidTokenError:
         raise token_exception
     user: Optional[SchemaUserInDB] = await db_connection.fetchrow(
-        "SELECT * FROM Users WHERE login = $1", token.username 
+        "SELECT * FROM Users WHERE login = $1", decoded_token.username 
     )
     if user is None:
         raise token_exception
@@ -108,7 +112,7 @@ async def authorization(
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password"
+            detail="Invalid login or password"
         )
     return await JWTToken.create_token(
         UserInToken(

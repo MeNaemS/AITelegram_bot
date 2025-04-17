@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from dependences.bot_request import depends_ask_bot
-from models.openrouterai.integration import Response
+from models.integration import Response
 
 router: APIRouter = APIRouter(prefix="/api", tags=["api"])
 
