@@ -1,16 +1,41 @@
+CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL DEFAULT 0.7,
+    top_p FLOAT NOT NULL DEFAULT 0.9,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS Users (
     id SERIAL PRIMARY KEY,
-    login VARCHAR NOT NULL UNIQUE,
-    password VARCHAR NOT NULL,
-    email VARCHAR NOT NULL,
-    name VARCHAR NULL,
-    surname VARCHAR NULL,
-    patronymic VARCHAR NULL
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Messages (
     id SERIAL PRIMARY KEY,
-    author VARCHAR NULL,
-    message VARCHAR NOT NULL,
-    FOREIGN KEY (author) REFERENCES Users(login)
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
 );

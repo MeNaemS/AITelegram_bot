@@ -17,7 +17,7 @@ async def auth_register(request: Request, user_register: UserRegister) -> Awaita
     )
 
 
-async def current_user(request: Request, token: str = Header(...)) -> UserInDB:
+async def current_user(request: Request, token: str = Header(...)) -> Awaitable[UserInDB]:
     return await current_user_service(
         request.state.db_connection,
         token,

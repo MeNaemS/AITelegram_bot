@@ -19,7 +19,6 @@ class DB:
 @dataclass(slots=True)
 class OpenAI:
     api_key: str
-    model: str
 
 
 @dataclass(slots=True)
