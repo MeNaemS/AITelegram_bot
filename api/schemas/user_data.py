@@ -14,3 +14,4 @@ class UserInDB(TypedDict):
     name: Optional[str]
     surname: Optional[str]
     patronymic: Optional[str]
+    chat_id: Optional[int]
