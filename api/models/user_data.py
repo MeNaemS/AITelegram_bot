@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class UserAuth(BaseModel):
@@ -24,3 +25,4 @@ class UserRegister(UserAuth, UserOptionalInfo):
 
 class UserInDB(UserAuth, UserOptionalInfo):
     id: int
+    created_at: datetime
