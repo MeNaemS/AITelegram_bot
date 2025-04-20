@@ -3,10 +3,10 @@ from fastapi.responses import ORJSONResponse
 import asyncpg
 from dependences import lifespan
 from router import api_router, auth_router
-import logging
+from logging import getLogger, Logger
 import traceback
 
-logger = logging.getLogger(__name__)
+logger: Logger = getLogger(__name__)
 
 app = FastAPI(lifespan=lifespan)
 
