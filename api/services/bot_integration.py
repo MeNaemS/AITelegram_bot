@@ -1,12 +1,11 @@
-from typing import Union, List, Optional
+from typing import List, Optional
+from fastapi import HTTPException
 from models.user_data import UserInDB
-from models.openrouterai.integration import ClientTextMessage, ClientImageMessage, TelegramParameters, ChatParameters, Response
+from models.integration import ClientMessage, ChatParameters, TelegramParameters, Model
 from models.chat import Message, ChatInfo
 from schemas.db import DBChatInfo, DBFilteredMessages
-from schemas.openrouterai.response import AiResponseModel
 from database.connect import PGConnection
-from .http_connection import AioHttp
-from schemas.settings import OpenAI
+from ollama import AsyncClient, ChatResponse
 
 
 async def get_user_chat(
@@ -35,7 +34,7 @@ async def get_user_chat(
             "SELECT id, name, temperature, top_p FROM Chats WHERE id = $1",
             chat_id
         )
-    messages: DBFilteredMessages = await db_connection.fetch(
+    messages: List[DBFilteredMessages] = await db_connection.fetch(
         """
         SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
         LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
@@ -69,52 +68,56 @@ async def save_message(
 async def service_ask_bot(
     user: UserInDB,
     db_connection: PGConnection,
-    http_session: AioHttp,
-    openai_settings: OpenAI,
-    messages_data: List[Union[ClientTextMessage, ClientImageMessage]],
+    session: AsyncClient,
+    model: Model,
+    messages_data: ClientMessage,
     telegram_parameters: TelegramParameters,
-    chat_parameters: ChatParameters
-) -> Response:
+    chat_parameters: ChatParameters,
+    ai_models: List[str]
+) -> ChatResponse:
+    if model.name not in ai_models:
+        raise HTTPException(status_code=404, detail={"error": "Model not found"})
     chat_info: ChatInfo = await get_user_chat(
         user, telegram_parameters, chat_parameters, db_connection
     )
-    for message in messages_data:
+    if messages_data.content:
         await save_message(
             db_connection,
             chat_info.chat_id,
-            message.text if isinstance(message, ClientTextMessage) else message.image_url.url,
-            isinstance(message, ClientImageMessage),
+            messages_data.content,
+            False,
             user.id,
             False
         )
-    response: AiResponseModel = await http_session.post(
-        url='chat/completions',
-        json={
-            'model': openai_settings.model,
-            'messages': [
-                {
-                    'role': 'assistant' if message.is_bot_message else 'user',
-                } | {
-                    'content': message.text_content
-                } if message.text_content is not None else {
-                    'image_url': {
-                        'url': message.image_content
-                    }
-                } for message in chat_info.messages
-            ] + [
-                {
-                    'role': 'user',
-                    'content': [message_data.model_dump() for message_data in messages_data]
-                }
-            ]
-        } | chat_parameters.model_dump()
+    for image_url in messages_data.images:
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            image_url,
+            True,
+            user.id,
+            False
+        )
+    response: ChatResponse = await session.chat(
+        model=model.name,
+        messages=[
+            {
+                'role': 'assistant' if message.is_bot_message else 'user',
+                'content': message.text_content if message.text_content else '',
+                'images': [message.image_content] if message.image_content else []
+            } for message in chat_info.messages
+        ] + [{'role': 'user'} | messages_data.model_dump()],
+        options={
+            'temperature': chat_parameters.temperature,
+            'top_p': chat_parameters.top_p
+        }
     )
     await save_message(
         db_connection,
         chat_info.chat_id,
-        response['choices'][0]['message']['content'],
+        response.message.content,
         False,
         None,
         True
     )
-    return Response(response=response['choices'][0]['message']['content'])
+    return response

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -6,20 +6,9 @@ class ModelParameters(BaseModel):
     model: str
 
 
-class ImageUrl(BaseModel):
-    url: str
-
-
-class ClientTypeMessage(BaseModel):
-    type: str
-
-
-class ClientTextMessage(ClientTypeMessage):
-    text: str
-
-
-class ClientImageMessage(ClientTypeMessage):
-    image_url: ImageUrl
+class ClientMessage(BaseModel):
+    content: Optional[str] = None
+    images: List[str] = []
 
 
 class TelegramParameters(BaseModel):
@@ -38,5 +27,5 @@ class ChatParameters(BaseModel):
     plagins: List[Plugin] = []
 
 
-class Response(BaseModel):
-    response: str
+class Model(BaseModel):
+    name: str

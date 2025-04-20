@@ -17,17 +17,6 @@ class DB:
 
 
 @dataclass(slots=True)
-class OpenAI:
-    api_key: str
-
-
-@dataclass(slots=True)
-class API:
-    db: DB
-    openai: OpenAI
-
-
-@dataclass(slots=True)
 class JWT:
     secret_key: str
     algorithm: str
@@ -35,7 +24,20 @@ class JWT:
 
 
 @dataclass(slots=True)
-class Settings:
+class AI:
+    models: list[str]
+    ollama_host: str
+    ollama_port: int
+
+
+@dataclass(slots=True)
+class API:
+    db: DB
     jwt: JWT
+    ai: AI
+
+
+@dataclass(slots=True)
+class Settings:
     bot: Bot
     api: API
