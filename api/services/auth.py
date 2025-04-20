@@ -42,13 +42,11 @@ class JWTToken:
         token_info: JWT
     ) -> Awaitable[str]:
         to_encode: SchemaUserInToken = data.model_dump()
-        expire: timedelta = datetime.now() + timedelta(minutes=token_info.expire)
-        to_encode.update({"expires_delta": str(expire)})
         encoded_jwt: str = encode(to_encode, token_info.secret_key, algorithm=token_info.algorithm)
         return Token(
             access_token=encoded_jwt,
             token_type="bearer",
-            expires_delta=str(expire)
+            expires_delta=data.expires_delta
         )
 
     @staticmethod
@@ -117,6 +115,7 @@ async def authorization(
     return await JWTToken.create_token(
         UserInToken(
             id=userdata['id'],
+            expires_delta=str(datetime.now() + timedelta(minutes=jwt_info.expire)),
             username=userdata['login']
         ),
         jwt_info

@@ -5,7 +5,11 @@ from models.integration import ClientMessage, ChatParameters, TelegramParameters
 from models.chat import Message, ChatInfo
 from schemas.db import DBChatInfo, DBFilteredMessages
 from database.connect import PGConnection
-from ollama import AsyncClient, ChatResponse
+from ollama import AsyncClient, ChatResponse, ResponseError
+import logging
+import httpx
+
+logger = logging.getLogger(__name__)
 
 
 async def get_user_chat(
@@ -65,6 +69,24 @@ async def save_message(
     )
 
 
+async def check_model_available(session: AsyncClient, model_name: str) -> bool:
+    """Check if a model exists and is ready to use."""
+    try:
+        models = await session.list()
+        available_models = [model.name for model in models.models]
+        if model_name in available_models:
+            return True
+        await session.show(model=model_name)
+        return False
+    except ResponseError as e:
+        if "not found" in str(e).lower() or "404" in str(e):
+            return False
+        raise
+    except Exception as e:
+        logger.error(f"Error checking model availability: {str(e)}")
+        return False
+
+
 async def service_ask_bot(
     user: UserInDB,
     db_connection: PGConnection,
@@ -76,7 +98,9 @@ async def service_ask_bot(
     ai_models: List[str]
 ) -> ChatResponse:
     if model.name not in ai_models:
-        raise HTTPException(status_code=404, detail={"error": "Model not found"})
+        error_message = f"Model {model.name} not in allowed models list: {ai_models}"
+        logger.warning(error_message)
+        raise HTTPException(status_code=404, detail={"error": error_message})
     chat_info: ChatInfo = await get_user_chat(
         user, telegram_parameters, chat_parameters, db_connection
     )
@@ -89,6 +113,7 @@ async def service_ask_bot(
             user.id,
             False
         )
+    
     for image_url in messages_data.images:
         await save_message(
             db_connection,
@@ -98,26 +123,87 @@ async def service_ask_bot(
             user.id,
             False
         )
-    response: ChatResponse = await session.chat(
-        model=model.name,
-        messages=[
-            {
-                'role': 'assistant' if message.is_bot_message else 'user',
-                'content': message.text_content if message.text_content else '',
-                'images': [message.image_content] if message.image_content else []
-            } for message in chat_info.messages
-        ] + [{'role': 'user'} | messages_data.model_dump()],
-        options={
-            'temperature': chat_parameters.temperature,
-            'top_p': chat_parameters.top_p
-        }
-    )
-    await save_message(
-        db_connection,
-        chat_info.chat_id,
-        response.message.content,
-        False,
-        None,
-        True
-    )
-    return response
+    try:
+        response: ChatResponse = await session.chat(
+            model=model.name,
+            messages=[
+                {
+                    'role': 'assistant' if message.is_bot_message else 'user',
+                    'content': message.text_content if message.text_content else '',
+                    'images': [message.image_content] if message.image_content else []
+                } for message in chat_info.messages
+            ] + [{'role': 'user'} | messages_data.model_dump()],
+            options={
+                'temperature': chat_parameters.temperature,
+                'top_p': chat_parameters.top_p
+            }
+        )
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            response.message.content,
+            False,
+            None,
+            True
+        )
+        return response
+    except ResponseError as e:
+        error_message = f"Ollama API error: {str(e)}"
+        status_code = 500
+        if "404" in str(e) or "not found" in str(e).lower():
+            error_message = f"Model {model.name} not found or not loaded: {str(e)}"
+            status_code = 404
+        elif "memory" in str(e).lower():
+            error_message = f"Insufficient memory to run model {model.name}: {str(e)}"
+            status_code = 507
+        logger.error(error_message)
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            f"Error: {error_message}",
+            False,
+            None,
+            True
+        )
+        if status_code in [404, 507]:
+            try:
+                models = await session.list()
+                available_models = [model.name for model in models.models]
+                if available_models:
+                    suggestion = f"Available models: {', '.join(available_models)}"
+                    logger.info(suggestion)
+                    await save_message(
+                        db_connection,
+                        chat_info.chat_id,
+                        suggestion,
+                        False,
+                        None,
+                        True
+                    )
+            except Exception as list_error:
+                logger.error(f"Could not list available models: {str(list_error)}")
+        raise HTTPException(status_code=status_code, detail={"error": error_message})
+    except httpx.ConnectError as e:
+        error_message = f"Could not connect to Ollama service: {str(e)}"
+        logger.error(error_message)
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            f"Error: {error_message}",
+            False,
+            None,
+            True
+        )
+        raise HTTPException(status_code=503, detail={"error": "Ollama service unavailable"})
+    except Exception as e:
+        error_message = f"Unexpected error: {str(e)}"
+        logger.error(error_message)
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            f"Error: {error_message}",
+            False,
+            None,
+            True
+        )
+        raise HTTPException(status_code=500, detail={"error": error_message})

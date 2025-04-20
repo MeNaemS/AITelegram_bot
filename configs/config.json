@@ -1,19 +1,19 @@
 {
     "bot": {
-        "name": "QwenTelegram_bot"
+        "name": "AITelegram_bot"
     },
     "api": {
         "jwt": {
             "expire": 30
         },
         "db": { 
-            "host": "localhost",
+            "host": "postgres",
             "port": 5432,
             "database": "users_info"
         },
         "ai": {
-            "models": ["llama3", "qwen2.5", "deepseek-v3"],
-            "ollama_host": "localhost",
+            "models": ["qwen2.5:0.5b", "deepseek-r1:1.5b"],
+            "ollama_host": "ollama",
             "ollama_port": 11434
         }
     }
