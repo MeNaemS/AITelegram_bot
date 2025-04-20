@@ -14,13 +14,13 @@ class UserInToken(BaseModel):
 
 
 class UserOptionalInfo(BaseModel):
-    name: Optional[str]
-    surname: Optional[str]
-    patronymic: Optional[str]
+    name: Optional[str] = None
+    surname: Optional[str] = None
+    patronymic: Optional[str] = None
 
 
 class UserRegister(UserAuth, UserOptionalInfo):
-    email: str
+    email: Optional[str] = None
 
 
 class UserInDB(UserAuth, UserOptionalInfo):

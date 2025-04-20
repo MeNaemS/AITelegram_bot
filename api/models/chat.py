@@ -3,8 +3,8 @@ from pydantic import BaseModel
 
 
 class Message(BaseModel):
-    text_content: Optional[str]
-    image_content: Optional[str]
+    text_content: Optional[str] = None
+    image_content: Optional[str] = None
     is_bot_message: bool
 
 

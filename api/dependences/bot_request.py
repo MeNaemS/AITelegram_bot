@@ -1,7 +1,8 @@
-from typing import Annotated, Union, List
+from typing import Annotated, Optional
 from fastapi import Depends, Request
+from ollama import ChatResponse
 from models.user_data import UserInDB
-from models.integration import ClientTextMessage, ClientImageMessage, TelegramParameters, Response, ChatParameters, Model
+from models.integration import ClientMessage, TelegramParameters, ChatParameters, Model
 from .auth import current_user
 from services.bot_integration import service_ask_bot
 
@@ -10,10 +11,10 @@ async def depends_ask_bot(
     request: Request,
     user: Annotated[UserInDB, Depends(current_user)],
     model: Model,
-    message_data: Union[ClientTextMessage, ClientImageMessage],
+    message_data: ClientMessage,
     telegram_parameters: TelegramParameters,
-    chat_parameters: ChatParameters
-) -> Response:
+    chat_parameters: Optional[ChatParameters] = None
+) -> ChatResponse:
     return await service_ask_bot(
         user,
         request.state.db_connection,
@@ -21,5 +22,6 @@ async def depends_ask_bot(
         model,
         message_data,
         telegram_parameters,
-        chat_parameters
+        chat_parameters,
+        request.state.settings.api.ai.models
     )

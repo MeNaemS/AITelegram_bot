@@ -1,6 +1,7 @@
-from typing import Union, List, Optional
+from typing import List, Optional
+from fastapi import HTTPException
 from models.user_data import UserInDB
-from models.integration import ClientTextMessage, ClientImageMessage, ChatParameters, TelegramParameters, Response, Model
+from models.integration import ClientMessage, ChatParameters, TelegramParameters, Model
 from models.chat import Message, ChatInfo
 from schemas.db import DBChatInfo, DBFilteredMessages
 from database.connect import PGConnection
@@ -69,93 +70,54 @@ async def service_ask_bot(
     db_connection: PGConnection,
     session: AsyncClient,
     model: Model,
-    messages_data: Union[ClientTextMessage, ClientImageMessage],
+    messages_data: ClientMessage,
     telegram_parameters: TelegramParameters,
-    chat_parameters: ChatParameters
-) -> Response:
+    chat_parameters: ChatParameters,
+    ai_models: List[str]
+) -> ChatResponse:
+    if model.name not in ai_models:
+        raise HTTPException(status_code=404, detail={"error": "Model not found"})
     chat_info: ChatInfo = await get_user_chat(
         user, telegram_parameters, chat_parameters, db_connection
     )
-    
-    # Save the user message to the database
+    if messages_data.content:
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            messages_data.content,
+            False,
+            user.id,
+            False
+        )
+    for image_url in messages_data.images:
+        await save_message(
+            db_connection,
+            chat_info.chat_id,
+            image_url,
+            True,
+            user.id,
+            False
+        )
+    response: ChatResponse = await session.chat(
+        model=model.name,
+        messages=[
+            {
+                'role': 'assistant' if message.is_bot_message else 'user',
+                'content': message.text_content if message.text_content else '',
+                'images': [message.image_content] if message.image_content else []
+            } for message in chat_info.messages
+        ] + [{'role': 'user'} | messages_data.model_dump()],
+        options={
+            'temperature': chat_parameters.temperature,
+            'top_p': chat_parameters.top_p
+        }
+    )
     await save_message(
         db_connection,
         chat_info.chat_id,
-        messages_data.text if isinstance(messages_data, ClientTextMessage) else messages_data.image_url.url,
-        isinstance(messages_data, ClientImageMessage),
-        user.id,
-        False
+        response.message.content,
+        False,
+        None,
+        True
     )
-    
-    # Format messages for Ollama in the correct structure
-    formatted_messages = []
-    
-    # Add chat history
-    for message in chat_info.messages:
-        if message.text_content is not None:
-            formatted_messages.append({
-                'role': 'assistant' if message.is_bot_message else 'user',
-                'content': message.text_content
-            })
-        elif message.image_content is not None:
-            # Handle image content if needed
-            formatted_messages.append({
-                'role': 'user',
-                'content': f"[Image: {message.image_content}]"
-            })
-    
-    # Add the current message
-    if isinstance(messages_data, ClientTextMessage):
-        formatted_messages.append({
-            'role': 'user',
-            'content': messages_data.text
-        })
-    else:
-        # Handle image message
-        formatted_messages.append({
-            'role': 'user',
-            'content': f"[Image URL: {messages_data.image_url.url}]"
-        })
-    
-    try:
-        # Make the API call with proper error handling
-        response = await session.chat(
-            model=model.name,
-            messages=formatted_messages,
-            options={
-                'temperature': chat_parameters.temperature,
-                'top_p': chat_parameters.top_p
-            }
-        )
-        
-        # Extract the response content
-        response_content = response.message.content
-        
-        # Save the bot's response to the database
-        await save_message(
-            db_connection,
-            chat_info.chat_id,
-            response_content,
-            False,
-            None,
-            True
-        )
-        
-        return Response(response=response_content)
-        
-    except Exception as e:
-        # Log the error and return a fallback response
-        error_message = f"Error communicating with Ollama: {str(e)}"
-        print(error_message)
-        
-        # Save the error message to the database
-        await save_message(
-            db_connection,
-            chat_info.chat_id,
-            f"Sorry, I encountered an error: {str(e)}",
-            False,
-            None,
-            True
-        )
-        
-        return Response(response=f"Sorry, I encountered an error: {str(e)}")
+    return response
