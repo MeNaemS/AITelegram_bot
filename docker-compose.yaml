@@ -16,7 +16,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: ai_pgadmin
+    container_name: AIPgAdmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
@@ -30,34 +30,34 @@ services:
     depends_on:
       - postgres
       
-  # ollama:
-  #   image: ollama/ollama:latest
-  #   container_name: ai_ollama
-  #   restart: always
-  #   ports:
-  #     - "11434:11434"
-  #   volumes:
-  #     - ollama_data:/root/.ollama
-  #     - ./ollama-init.sh:/ollama-init.sh
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             count: 1
-  #             capabilities: [gpu]
-  #       limits:
-  #         memory: 4G
-  #   environment:
-  #     - NVIDIA_VISIBLE_DEVICES=all
-  #     - OLLAMA_HOST=0.0.0.0
-  #     - OLLAMA_MODELS=llama3:8b,qwen2.5
-  #     - CUDA_VISIBLE_DEVICES=0
-  #     - OLLAMA_GPU_LAYERS=20
-  #     - OLLAMA_CUDA_MEMORY_LIMIT=4096
-  #   entrypoint: ["/bin/sh", "/ollama-init.sh"]
-  #   networks:
-  #     - AIBotNetwork
+  ollama:
+    image: ollama/ollama:latest
+    container_name: AIOllama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./ollama-init.sh:/ollama-init.sh
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 2G
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_MODELS=llama3,qwen2.5,deepseek-v3
+      - CUDA_VISIBLE_DEVICES=0
+      - OLLAMA_GPU_LAYERS=20
+      - OLLAMA_CUDA_MEMORY_LIMIT=4096
+    entrypoint: ["/bin/sh", "/ollama-init.sh"]
+    networks:
+      - AIBotNetwork
 
 networks:
   AIBotNetwork:

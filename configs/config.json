@@ -6,10 +6,15 @@
         "jwt": {
             "expire": 30
         },
-        "db": {
+        "db": { 
             "host": "localhost",
             "port": 5432,
             "database": "users_info"
+        },
+        "ai": {
+            "models": ["llama3", "qwen2.5", "deepseek-v3"],
+            "ollama_host": "localhost",
+            "ollama_port": 11434
         }
     }
 }
