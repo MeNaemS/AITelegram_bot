@@ -39,5 +39,4 @@ class API:
 
 @dataclass(slots=True)
 class Settings:
-    bot: Bot
     api: API
