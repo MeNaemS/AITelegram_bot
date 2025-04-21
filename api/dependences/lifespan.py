@@ -3,18 +3,14 @@ from fastapi import FastAPI
 from ollama import AsyncClient
 from database.connect import create_connection, PGConnection
 from config import settings
-import logging
+from logging import getLogger, Logger
 
-logging.config.fileConfig('logging_config.ini')
-logger: logging.Logger = logging.getLogger(__name__)
+logger: Logger = getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     connection: PGConnection = await create_connection(settings.api.db)
-    logger.info(
-        f"Creating connection to ollama (http://{settings.api.ai.ollama_host}:{settings.api.ai.ollama_port})"
-    )
     session: AsyncClient = AsyncClient(
         host=f"http://{settings.api.ai.ollama_host}:{settings.api.ai.ollama_port}"
     )
@@ -24,4 +20,5 @@ async def lifespan(app: FastAPI):
         "session": session,
         "settings": settings
     }
+    
     await connection.close()
