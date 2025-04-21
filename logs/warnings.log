@@ -1,0 +1,137 @@
+2025-04-21 13:58:43 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-21 14:39:06 - application.app - ERROR - Error occurred: AttributeError - 'NoneType' object has no attribute 'temperature'
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 104, in service_ask_bot
+    chat_info: ChatInfo = await get_user_chat(
+                          ^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 31, in get_user_chat
+    telegram_parameters.chat_id, chat_parameters.temperature, chat_parameters.top_p
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'temperature'
+
+2025-04-21 14:39:45 - application.app - ERROR - Error occurred: UniqueViolationError - duplicate key value violates unique constraint "users_login_key"
+DETAIL:  Key (login)=(Andew) already exists.
+Path: /auth/register, Method: POST
+Traceback: NoneType: None
+
+2025-04-21 14:40:01 - application.app - ERROR - Error occurred: AttributeError - 'NoneType' object has no attribute 'temperature'
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 104, in service_ask_bot
+    chat_info: ChatInfo = await get_user_chat(
+                          ^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 31, in get_user_chat
+    telegram_parameters.chat_id, chat_parameters.temperature, chat_parameters.top_p
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'temperature'
+
+2025-04-21 14:40:21 - services.bot_integration - WARNING - Model qwen not in allowed models list: ['qwen2.5:0.5b', 'deepseek-r1:1.5b']
+2025-04-21 14:40:30 - services.bot_integration - ERROR - Insufficient memory to run model qwen2.5:0.5b: model requires more system memory (456.4 MiB) than is available (396.6 MiB) (status code: 500)
+2025-04-21 14:40:30 - services.bot_integration - ERROR - Could not list available models: 'Model' object has no attribute 'name'
+2025-04-21 14:41:43 - services.bot_integration - ERROR - Insufficient memory to run model qwen2.5:0.5b: model requires more system memory (878.0 MiB) than is available (463.8 MiB) (status code: 500)
+2025-04-21 14:41:43 - services.bot_integration - ERROR - Could not list available models: 'Model' object has no attribute 'name'
+2025-04-21 14:42:26 - services.bot_integration - ERROR - Insufficient memory to run model qwen2.5:0.5b: model requires more system memory (882.4 MiB) than is available (557.9 MiB) (status code: 500)
+2025-04-21 14:42:26 - services.bot_integration - ERROR - Could not list available models: 'Model' object has no attribute 'name'
+2025-04-21 14:48:43 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-21 15:05:40 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-21 15:05:48 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:06:37 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:17:19 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:18:03 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-21 15:18:11 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:19:39 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:19:56 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:21:08 - services.bot_integration - ERROR - Ollama API error: llama runner process has terminated: signal: killed (status code: 500)
+2025-04-21 15:34:31 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-21 15:34:31 - services.bot_integration - ERROR - Model deepseek-r1:1.5b not found or not loaded: model "deepseek-r1:1.5b" not found, try pulling it first (status code: 404)
+2025-04-21 15:35:55 - services.bot_integration - ERROR - Model qwen2.5 not found or not loaded: model "qwen2.5" not found, try pulling it first (status code: 404)
