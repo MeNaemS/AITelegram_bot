@@ -7,9 +7,39 @@ from schemas.db import DBChatInfo, DBFilteredMessages
 from database.connect import PGConnection
 from ollama import AsyncClient, ChatResponse, ResponseError
 import logging
-import httpx
 
 logger = logging.getLogger(__name__)
+
+# Максимальное количество сообщений, которые будут храниться в истории чата
+MAX_CHAT_HISTORY = 18
+
+
+async def trim_chat_history(db_connection: PGConnection, chat_id: int, max_messages: int = MAX_CHAT_HISTORY):
+    try:
+        total_messages = await db_connection.fetchval(
+            "SELECT COUNT(*) FROM Messages WHERE chat_id = $1",
+            chat_id
+        )
+        if total_messages <= max_messages:
+            return
+        to_delete = total_messages - max_messages
+        old_message_ids = await db_connection.fetch(
+            """
+            SELECT id FROM Messages WHERE chat_id = $1 
+            ORDER BY created_at ASC LIMIT $2
+            """,
+            chat_id, to_delete
+        )
+        if not old_message_ids:
+            return
+        ids_to_delete = [row['id'] for row in old_message_ids]
+        await db_connection.execute(
+            """DELETE FROM Messages WHERE id = ANY($1::bigint[])""",
+            ids_to_delete
+        )
+        logger.info(f"Trimmed chat {chat_id} history: removed {len(ids_to_delete)} old messages")
+    except Exception as e:
+        logger.error(f"Error trimming chat history: {str(e)}")
 
 
 async def get_user_chat(
@@ -67,6 +97,7 @@ async def save_message(
         """.format('text_content' if not is_image else 'image_content'),
         content, author_id, chat_id, is_bot_message
     )
+    await trim_chat_history(db_connection, chat_id)
 
 
 async def check_model_available(session: AsyncClient, model_name: str) -> bool:
@@ -128,6 +159,21 @@ async def service_ask_bot(
             model=model.name,
             messages=[
                 {
+                    'role': 'system',
+                    'content': """
+                        Ты - полезный и дружелюбный ассистент, который всегда отвечает пользователям на русском языке.
+                        Правила общения:
+                        - Всегда пиши ответы только на русском языке
+                        - Общайся уважительно и вежливо
+                        - Используй HTML теги для форматирования (<b></b> для жирного текста, <i></i> для курсива)
+                        - Не используй Markdown или MarkdownV2 форматирование
+                        - Давай полезные и информативные ответы
+                        - Если не знаешь ответ, честно признайся в этом
+                        - Старайся делать ответы краткими и по существу, всегда спрашивай в конце ответа, если нужно что-то уточнить
+                    """
+                }
+            ] + [
+                {
                     'role': 'assistant' if message.is_bot_message else 'user',
                     'content': message.text_content if message.text_content else '',
                     'images': [message.image_content] if message.image_content else []
@@ -183,18 +229,6 @@ async def service_ask_bot(
             except Exception as list_error:
                 logger.error(f"Could not list available models: {str(list_error)}")
         raise HTTPException(status_code=status_code, detail={"error": error_message})
-    except httpx.ConnectError as e:
-        error_message = f"Could not connect to Ollama service: {str(e)}"
-        logger.error(error_message)
-        await save_message(
-            db_connection,
-            chat_info.chat_id,
-            f"Error: {error_message}",
-            False,
-            None,
-            True
-        )
-        raise HTTPException(status_code=503, detail={"error": "Ollama service unavailable"})
     except Exception as e:
         error_message = f"Unexpected error: {str(e)}"
         logger.error(error_message)

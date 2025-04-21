@@ -3,7 +3,7 @@
         "name": "AITelegram_bot"
     },
     "api": {
-        "host": "localhost",
+        "host": "api",
         "port": 8000,
         "jwt": {
             "expire": 30
@@ -14,7 +14,7 @@
             "database": "users_info"
         },
         "ai": {
-            "models": ["qwen2.5", "deepseek-r1:1.5b"],
+            "models": ["qwen2.5", "llama3"],
             "ollama_host": "ollama",
             "ollama_port": 11434
         }
