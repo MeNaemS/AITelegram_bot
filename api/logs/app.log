@@ -1,0 +1,2066 @@
+2025-04-20 15:58:44 - root - INFO - API Server is starting up with configured logging
+2025-04-20 15:58:44 - database.connect - INFO - Creating connection to users_info on localhost:5432
+2025-04-20 15:58:44 - database.connect - INFO - Executing base migration
+2025-04-20 15:58:44 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 15:58:44 - database.connect - INFO - Base migration executed
+2025-04-20 15:58:44 - dependences.lifespan - INFO - Creating connection to ollama (http://localhost:11434)
+2025-04-20 15:58:44 - dependences.lifespan - INFO - Session created
+2025-04-20 15:58:44 - database.connect - INFO - Closing connection
+2025-04-20 13:00:44 - root - INFO - API Server is starting up with configured logging
+2025-04-20 13:00:44 - database.connect - INFO - Creating connection to users_info on localhost:5432
+2025-04-20 13:02:42 - root - INFO - API Server is starting up with configured logging
+2025-04-20 13:02:42 - database.connect - INFO - Creating connection to users_info on localhost:5432
+2025-04-20 13:03:25 - root - INFO - API Server is starting up with configured logging
+2025-04-20 13:03:25 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:03:25 - database.connect - INFO - Executing base migration
+2025-04-20 13:03:25 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:03:25 - database.connect - INFO - Base migration executed
+2025-04-20 13:03:25 - dependences.lifespan - INFO - Creating connection to ollama (http://localhost:11434)
+2025-04-20 13:03:25 - dependences.lifespan - INFO - Session created
+2025-04-20 13:04:40 - database.connect - INFO - Closing connection
+2025-04-20 13:04:41 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:04:41 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:04:41 - database.connect - INFO - Executing base migration
+2025-04-20 13:04:41 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:04:41 - database.connect - INFO - Base migration executed
+2025-04-20 13:04:41 - dependences.lifespan - INFO - Creating connection to ollama (http://localhost:11434)
+2025-04-20 13:04:41 - dependences.lifespan - INFO - Session created
+2025-04-20 13:04:46 - database.connect - INFO - Closing connection
+2025-04-20 13:04:46 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:04:46 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:04:46 - database.connect - INFO - Executing base migration
+2025-04-20 13:04:46 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:04:46 - database.connect - INFO - Base migration executed
+2025-04-20 13:04:46 - dependences.lifespan - INFO - Creating connection to ollama (http://localhost:11434)
+2025-04-20 13:04:46 - dependences.lifespan - INFO - Session created
+2025-04-20 13:04:57 - database.connect - INFO - Closing connection
+2025-04-20 13:04:57 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:04:57 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:04:57 - database.connect - INFO - Executing base migration
+2025-04-20 13:04:57 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:04:57 - database.connect - INFO - Base migration executed
+2025-04-20 13:04:57 - dependences.lifespan - INFO - Creating connection to ollama (http://localhost:11434)
+2025-04-20 13:04:57 - dependences.lifespan - INFO - Session created
+2025-04-20 13:05:14 - database.connect - INFO - Closing connection
+2025-04-20 13:05:15 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:05:15 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:05:15 - database.connect - INFO - Executing base migration
+2025-04-20 13:05:15 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:05:15 - database.connect - INFO - Base migration executed
+2025-04-20 13:05:15 - dependences.lifespan - INFO - Creating connection to ollama (http://localhost:11434)
+2025-04-20 13:05:15 - dependences.lifespan - INFO - Session created
+2025-04-20 13:07:39 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:07:39 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-20 13:07:57 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:07:57 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:07:57 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:07:57 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:07:57 - application.app - ERROR - Error occurred: ConnectionError - Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 628, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+2025-04-20 13:11:15 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:11:15 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:11:15 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:11:15 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:11:15 - application.app - ERROR - Error occurred: ConnectionError - Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 628, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+2025-04-20 13:12:02 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:12:02 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:12:02 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:12:02 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:12:02 - application.app - ERROR - Error occurred: ConnectionError - Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 628, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+2025-04-20 13:15:18 - database.connect - INFO - Closing connection
+2025-04-20 13:15:19 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:15:19 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:15:19 - database.connect - INFO - Executing base migration
+2025-04-20 13:15:19 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:15:19 - database.connect - INFO - Base migration executed
+2025-04-20 13:15:19 - dependences.lifespan - INFO - Creating connection to ollama (http://ollama:11434)
+2025-04-20 13:15:19 - dependences.lifespan - INFO - Session created
+2025-04-20 13:16:08 - database.connect - INFO - Closing connection
+2025-04-20 13:16:09 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:16:09 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:16:09 - database.connect - INFO - Executing base migration
+2025-04-20 13:16:09 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:16:09 - database.connect - INFO - Base migration executed
+2025-04-20 13:16:09 - dependences.lifespan - INFO - Creating connection to ollama (http://ollama:11434)
+2025-04-20 13:16:09 - dependences.lifespan - INFO - Session created
+2025-04-20 13:16:14 - database.connect - INFO - Closing connection
+2025-04-20 13:16:15 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:16:15 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:16:15 - database.connect - INFO - Executing base migration
+2025-04-20 13:16:15 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:16:15 - database.connect - INFO - Base migration executed
+2025-04-20 13:16:15 - dependences.lifespan - INFO - Creating connection to ollama (http://ollama:11434)
+2025-04-20 13:16:15 - dependences.lifespan - INFO - Session created
+2025-04-20 13:16:16 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:16:16 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:16:16 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:16:16 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:16:16 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+2025-04-20 13:16:16 - application.app - ERROR - Error occurred: ResponseError - model requires more system memory (5.9 GiB) than is available (3.9 GiB) (status code: 500)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model requires more system memory (5.9 GiB) than is available (3.9 GiB) (status code: 500)
+
+2025-04-20 13:18:49 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:18:49 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:18:49 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:18:49 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:18:50 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 13:18:50 - application.app - ERROR - Error occurred: ResponseError - model "qwen2.5" not found, try pulling it first (status code: 404)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model "qwen2.5" not found, try pulling it first (status code: 404)
+
+2025-04-20 13:18:58 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:18:58 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:18:58 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:18:58 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:18:58 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+2025-04-20 13:18:58 - application.app - ERROR - Error occurred: ResponseError - model requires more system memory (5.9 GiB) than is available (3.8 GiB) (status code: 500)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model requires more system memory (5.9 GiB) than is available (3.8 GiB) (status code: 500)
+
+2025-04-20 13:24:25 - database.connect - INFO - Closing connection
+2025-04-20 13:24:25 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:24:25 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:24:25 - database.connect - INFO - Executing base migration
+2025-04-20 13:24:25 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:24:25 - database.connect - INFO - Base migration executed
+2025-04-20 13:24:26 - dependences.lifespan - INFO - Session created
+2025-04-20 13:24:30 - database.connect - INFO - Closing connection
+2025-04-20 13:24:30 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:24:30 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:24:30 - database.connect - INFO - Executing base migration
+2025-04-20 13:24:30 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:24:30 - database.connect - INFO - Base migration executed
+2025-04-20 13:24:30 - dependences.lifespan - INFO - Session created
+2025-04-20 13:24:42 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:24:51 - database.connect - INFO - Closing connection
+2025-04-20 13:25:34 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:25:34 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:25:34 - database.connect - INFO - Executing base migration
+2025-04-20 13:25:34 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:25:34 - database.connect - INFO - Base migration executed
+2025-04-20 13:25:34 - dependences.lifespan - INFO - Session created
+2025-04-20 13:26:22 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:26:22 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-20 13:26:48 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:26:48 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:26:48 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:26:48 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:26:48 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 13:26:48 - application.app - ERROR - Error occurred: ResponseError - model "llama3:8b" not found, try pulling it first (status code: 404)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model "llama3:8b" not found, try pulling it first (status code: 404)
+
+2025-04-20 13:35:34 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:35:34 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:35:34 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:35:34 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:35:34 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+2025-04-20 13:35:34 - application.app - ERROR - Error occurred: ResponseError - model requires more system memory (5.9 GiB) than is available (3.9 GiB) (status code: 500)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model requires more system memory (5.9 GiB) than is available (3.9 GiB) (status code: 500)
+
+2025-04-20 13:36:38 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:36:38 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:36:38 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:36:38 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:36:38 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 13:36:38 - application.app - ERROR - Error occurred: ResponseError - model "qwen2.5:0.5b" not found, try pulling it first (status code: 404)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model "qwen2.5:0.5b" not found, try pulling it first (status code: 404)
+
+2025-04-20 13:36:44 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:36:44 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:36:44 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:36:44 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:36:49 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 13:36:49 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:37:08 - database.connect - INFO - Closing connection
+2025-04-20 13:39:25 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:39:25 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:39:25 - database.connect - INFO - Executing base migration
+2025-04-20 13:39:25 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:39:25 - database.connect - INFO - Base migration executed
+2025-04-20 13:39:25 - dependences.lifespan - INFO - Session created
+2025-04-20 13:41:20 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:41:20 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:41:20 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:41:20 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:41:25 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 13:41:25 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:42:14 - database.connect - INFO - Closing connection
+2025-04-20 13:42:43 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:42:43 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:42:43 - database.connect - INFO - Executing base migration
+2025-04-20 13:42:43 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:42:43 - database.connect - INFO - Base migration executed
+2025-04-20 13:42:43 - dependences.lifespan - INFO - Session created
+2025-04-20 13:44:16 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:44:16 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:44:16 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:44:16 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:44:16 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 13:44:16 - application.app - ERROR - Error occurred: ResponseError - model "llama2:7b-chat-q4_0" not found, try pulling it first (status code: 404)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model "llama2:7b-chat-q4_0" not found, try pulling it first (status code: 404)
+
+2025-04-20 13:50:45 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:50:45 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 13:50:45 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 13:50:45 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 13:50:45 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+2025-04-20 13:50:45 - application.app - ERROR - Error occurred: ResponseError - model requires more system memory (8.4 GiB) than is available (3.8 GiB) (status code: 500)
+Path: /api/ask_bot, Method: POST
+Traceback: Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/dependences/bot_request.py", line 18, in depends_ask_bot
+    return await service_ask_bot(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/services/bot_integration.py", line 101, in service_ask_bot
+    response: ChatResponse = await session.chat(
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 837, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 682, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ollama/_client.py", line 626, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model requires more system memory (8.4 GiB) than is available (3.8 GiB) (status code: 500)
+
+2025-04-20 13:52:31 - database.connect - INFO - Closing connection
+2025-04-20 13:53:02 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:53:02 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:53:02 - database.connect - INFO - Executing base migration
+2025-04-20 13:53:02 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:53:02 - database.connect - INFO - Base migration executed
+2025-04-20 13:53:02 - dependences.lifespan - INFO - Session created
+2025-04-20 13:54:23 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 13:54:24 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-20 13:56:41 - database.connect - INFO - Closing connection
+2025-04-20 13:56:42 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:56:42 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:56:42 - database.connect - INFO - Executing base migration
+2025-04-20 13:56:42 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:56:42 - database.connect - INFO - Base migration executed
+2025-04-20 13:56:42 - dependences.lifespan - INFO - Session created
+2025-04-20 13:57:19 - database.connect - INFO - Closing connection
+2025-04-20 13:57:20 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 13:57:20 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 13:57:20 - database.connect - INFO - Executing base migration
+2025-04-20 13:57:20 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 13:57:20 - database.connect - INFO - Base migration executed
+2025-04-20 13:57:20 - dependences.lifespan - INFO - Session created
+2025-04-20 14:01:04 - database.connect - INFO - Closing connection
+2025-04-20 14:01:04 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 14:01:04 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 14:01:04 - database.connect - INFO - Executing base migration
+2025-04-20 14:01:04 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 14:01:04 - database.connect - INFO - Base migration executed
+2025-04-20 14:01:04 - dependences.lifespan - INFO - Session created
+2025-04-20 14:01:12 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:01:12 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:01:12 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:01:12 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:01:12 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 14:01:12 - services.bot_integration - ERROR - Model qwen2.5 not found or not loaded: model "qwen2.5" not found, try pulling it first (status code: 404)
+2025-04-20 14:01:12 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:01:12 - httpx - INFO - HTTP Request: GET http://ollama:11434/api/tags "HTTP/1.1 200 OK"
+2025-04-20 14:01:52 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:01:52 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:01:52 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:01:52 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:01:52 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+2025-04-20 14:01:52 - services.bot_integration - ERROR - Insufficient memory to run model qwen2.5: model requires more system memory (5.6 GiB) than is available (3.8 GiB) (status code: 500)
+2025-04-20 14:01:52 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:01:52 - httpx - INFO - HTTP Request: GET http://ollama:11434/api/tags "HTTP/1.1 200 OK"
+2025-04-20 14:01:52 - services.bot_integration - ERROR - Could not list available models: 'Model' object has no attribute 'name'
+2025-04-20 14:02:05 - database.connect - INFO - Closing connection
+2025-04-20 14:03:30 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 14:03:30 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 14:03:30 - database.connect - INFO - Executing base migration
+2025-04-20 14:03:30 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 14:03:30 - database.connect - INFO - Base migration executed
+2025-04-20 14:03:30 - dependences.lifespan - INFO - Session created
+2025-04-20 14:03:33 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:03:33 - services.bot_integration - WARNING - Model qwen2.5 not in allowed models list: ['qwen2.5:0.5b']
+2025-04-20 14:03:48 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:03:48 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:03:48 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:03:48 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:03:48 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 14:03:48 - services.bot_integration - ERROR - Model qwen2.5:0.5b not found or not loaded: model "qwen2.5:0.5b" not found, try pulling it first (status code: 404)
+2025-04-20 14:03:48 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:03:48 - httpx - INFO - HTTP Request: GET http://ollama:11434/api/tags "HTTP/1.1 200 OK"
+2025-04-20 14:04:34 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:04:34 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:04:34 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:04:34 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:04:40 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 14:04:40 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:04:54 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:04:54 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:04:54 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:04:54 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:05:00 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 14:05:00 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:08:00 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:08:00 - services.bot_integration - WARNING - Model qwen2.5 not in allowed models list: ['qwen2.5:0.5b']
+2025-04-20 14:08:20 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:08:20 - services.bot_integration - WARNING - Model deepseek-r1:1.5b not in allowed models list: ['qwen2.5:0.5b']
+2025-04-20 14:08:57 - database.connect - INFO - Closing connection
+2025-04-20 14:08:58 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-20 14:08:58 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-20 14:08:58 - database.connect - INFO - Executing base migration
+2025-04-20 14:08:58 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-20 14:08:58 - database.connect - INFO - Base migration executed
+2025-04-20 14:08:58 - dependences.lifespan - INFO - Session created
+2025-04-20 14:09:01 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:09:01 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:09:01 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:09:01 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:09:01 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 404 Not Found"
+2025-04-20 14:09:01 - services.bot_integration - ERROR - Model deepseek-r1:1.5b not found or not loaded: model "deepseek-r1:1.5b" not found, try pulling it first (status code: 404)
+2025-04-20 14:09:01 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:09:01 - httpx - INFO - HTTP Request: GET http://ollama:11434/api/tags "HTTP/1.1 200 OK"
+2025-04-20 14:09:01 - services.bot_integration - ERROR - Could not list available models: 'Model' object has no attribute 'name'
+2025-04-20 14:09:59 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 14:09:59 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 14:09:59 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 14:09:59 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 14:11:20 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 14:11:20 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:47:16 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 15:47:16 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-20 15:47:24 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 15:47:24 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 15:47:24 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 15:47:24 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:47:58 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 15:47:58 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:48:32 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 15:48:32 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 15:48:32 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 15:48:32 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:48:35 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 15:48:35 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:49:20 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 15:49:20 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 15:49:20 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 15:49:20 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:49:24 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 15:49:24 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:49:35 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 15:49:35 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 15:49:35 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 15:49:35 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 15:50:07 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 15:50:07 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 16:01:38 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-20 16:01:38 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-20 16:01:38 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-20 16:01:38 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 16:02:14 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-20 16:02:14 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-20 19:04:56 - database.connect - INFO - Closing connection
+2025-04-21 09:59:28 - root - INFO - API Server is starting up with configured logging (file only)
+2025-04-21 09:59:28 - database.connect - INFO - Creating connection to users_info on postgres:5432
+2025-04-21 09:59:28 - database.connect - INFO - Executing base migration
+2025-04-21 09:59:28 - database.connect - INFO - Executing query: CREATE TABLE IF NOT EXISTS Chats (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    temperature FLOAT NOT NULL,
+    top_p FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NULL,
+    surname VARCHAR(100) NULL,
+    patronymic VARCHAR(100) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS UserChats (
+    user_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, chat_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Messages (
+    id SERIAL PRIMARY KEY,
+    text_content TEXT NULL,
+    image_content TEXT NULL,
+    author_id INTEGER NULL,
+    chat_id INTEGER NOT NULL,
+    is_bot_message BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (chat_id) REFERENCES Chats(id) ON DELETE CASCADE,
+    CONSTRAINT content_not_empty CHECK (text_content IS NOT NULL OR image_content IS NOT NULL)
+);
+
+2025-04-21 09:59:28 - database.connect - INFO - Base migration executed
+2025-04-21 09:59:28 - dependences.lifespan - INFO - Session created
+2025-04-21 10:46:31 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-21 10:48:27 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-21 10:48:27 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-04-21 11:01:29 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-21 11:01:29 - services.bot_integration - WARNING - Model string not in allowed models list: ['qwen2.5:0.5b', 'deepseek-r1:1.5b']
+2025-04-21 11:01:38 - database.connect - INFO - Fetching row query: SELECT * FROM Users WHERE login = $1
+2025-04-21 11:01:38 - database.connect - INFO - Fetching row query: 
+        SELECT c.id, c.name, c.temperature, c.top_p FROM Chats c
+        JOIN UserChats uc ON c.id = uc.chat_id WHERE uc.user_id = $1 AND c.name = $2
+        
+2025-04-21 11:01:38 - database.connect - INFO - Fetching query: 
+        SELECT m.text_content, m.image_content, m.is_bot_message FROM Messages m
+        LEFT JOIN Users u ON m.author_id = u.id WHERE m.chat_id = $1 ORDER BY m.created_at ASC
+        
+2025-04-21 11:01:38 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-21 11:01:54 - httpx - INFO - HTTP Request: POST http://ollama:11434/api/chat "HTTP/1.1 200 OK"
+2025-04-21 11:01:54 - database.connect - INFO - Executing query: 
+        INSERT INTO Messages(text_content, author_id, chat_id, is_bot_message
+        )
+        VALUES ($1, $2, $3, $4)
+        
+2025-04-21 13:44:23 - database.connect - INFO - Closing connection

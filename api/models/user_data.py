@@ -10,6 +10,7 @@ class UserAuth(BaseModel):
 
 class UserInToken(BaseModel):
     username: str
+    expires_delta: str
     id: int
 
 
