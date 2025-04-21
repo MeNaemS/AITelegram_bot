@@ -13,6 +13,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - AIBotNetwork
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d users_info"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
   pgadmin:
     image: dpage/pgadmin4
@@ -47,15 +53,44 @@ services:
               count: 1
               capabilities: [gpu]
         limits:
-          memory: 2G
+          memory: 4G
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_MODELS=llama3,qwen2.5,deepseek-v3
+      - OLLAMA_MODELS=qwen2.5,deepseek-r1:1.5b
       - CUDA_VISIBLE_DEVICES=0
-      - OLLAMA_GPU_LAYERS=20
-      - OLLAMA_CUDA_MEMORY_LIMIT=4096
+      - OLLAMA_GPU_LAYERS=14
+      - OLLAMA_CUDA_MEMORY_LIMIT=3584
     entrypoint: ["/bin/sh", "/ollama-init.sh"]
+    networks:
+      - AIBotNetwork
+      
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: AIServer
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    volumes:
+      - ./api:/app
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+    command: >
+      bash -c "
+        mkdir -p /app/logs && 
+        touch /app/logs/app.log &&
+        echo 'Waiting for Ollama service to initialize...' &&
+        sleep 10 &&
+        echo 'Starting API server...' &&
+        uvicorn api:app --host 0.0.0.0 --port 8000 --log-level debug
+      "
     networks:
       - AIBotNetwork
 
