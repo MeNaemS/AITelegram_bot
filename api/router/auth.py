@@ -3,7 +3,7 @@ from typing import Annotated
 from models.verify import Token
 from dependences.auth import auth_login, auth_register
 
-router: APIRouter = APIRouter(prefix="/auth")
+router: APIRouter = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login", response_model=Token)

@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class UserAuth(BaseModel):
@@ -9,18 +10,20 @@ class UserAuth(BaseModel):
 
 class UserInToken(BaseModel):
     username: str
+    expires_delta: str
     id: int
 
 
 class UserOptionalInfo(BaseModel):
-    name: Optional[str]
-    surname: Optional[str]
-    patronymic: Optional[str]
+    name: Optional[str] = None
+    surname: Optional[str] = None
+    patronymic: Optional[str] = None
 
 
 class UserRegister(UserAuth, UserOptionalInfo):
-    email: str
+    email: Optional[str] = None
 
 
 class UserInDB(UserAuth, UserOptionalInfo):
     id: int
+    created_at: datetime

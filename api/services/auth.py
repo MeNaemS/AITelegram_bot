@@ -10,6 +10,7 @@ from fastapi import HTTPException, status
 
 # To create a token and also hash the password.
 from jwt import encode, decode
+import jwt
 from passlib.context import CryptContext
 
 # Work with DB.
@@ -19,7 +20,7 @@ from database.connect import PGConnection
 from models.user_data import UserRegister, UserInDB, UserInToken
 from models.verify import Token
 from schemas.settings import JWT
-from schemas.user_data import UserInToken as SchemaUserInToken
+from schemas.user_data import UserInToken as SchemaUserInToken, UserInDB as SchemaUserInDB
 
 
 class HashPassword:
@@ -41,18 +42,44 @@ class JWTToken:
         token_info: JWT
     ) -> Awaitable[str]:
         to_encode: SchemaUserInToken = data.model_dump()
-        expire: timedelta = datetime.now() + timedelta(minutes=token_info.expire)
-        to_encode.update({"expires_delta": str(expire)})
         encoded_jwt: str = encode(to_encode, token_info.secret_key, algorithm=token_info.algorithm)
         return Token(
             access_token=encoded_jwt,
             token_type="bearer",
-            expires_delta=str(expire)
+            expires_delta=data.expires_delta
         )
 
     @staticmethod
     async def decode_token(token: str, token_info: JWT) -> Awaitable[UserInToken]:
-        return UserInToken(**decode(token, token_info.secret_key, token_info.algorithm))
+        return UserInToken(**decode(token, token_info.secret_key, [token_info.algorithm]))
+
+
+async def current_user(
+    db_connection: PGConnection,
+    token: str,
+    jwt_info: JWT
+) -> Awaitable[UserInDB]:
+    token_exception: HTTPException = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"} 
+    )
+    try:
+        decoded_token: UserInToken = await JWTToken.decode_token(token, jwt_info)
+        if decoded_token.model_dump().get("username") is None:
+            raise token_exception
+        if "expires_delta" in decoded_token.model_dump():
+            expiration_time = datetime.fromisoformat(decoded_token.expires_delta)
+            if datetime.now() > expiration_time:
+                raise token_exception
+    except jwt.InvalidTokenError:
+        raise token_exception
+    user: Optional[SchemaUserInDB] = await db_connection.fetchrow(
+        "SELECT * FROM Users WHERE login = $1", decoded_token.username 
+    )
+    if user is None:
+        raise token_exception
+    return UserInDB(**user)
 
 
 async def authorization(
@@ -83,11 +110,12 @@ async def authorization(
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password"
+            detail="Invalid login or password"
         )
     return await JWTToken.create_token(
         UserInToken(
             id=userdata['id'],
+            expires_delta=str(datetime.now() + timedelta(minutes=jwt_info.expire)),
             username=userdata['login']
         ),
         jwt_info

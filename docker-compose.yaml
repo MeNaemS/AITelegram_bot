@@ -1,10 +1,10 @@
 services:
   postgres:
     image: postgres:17.4
-    container_name: QwenPostgres
+    container_name: AIPostgres
     restart: always
     environment:
-      POSTGRES_USER: MeNaemS
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: users_info
     ports:
@@ -12,28 +12,121 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - QwenBotNetwork
+      - AIBotNetwork
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d users_info"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: qwen_pgadmin
+    container_name: AIPgAdmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
-      - QwenBotNetwork
+      - AIBotNetwork
     depends_on:
       - postgres
+      
+  ollama:
+    image: ollama/ollama:latest
+    container_name: AIOllama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./ollama-init.sh:/ollama-init.sh
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 4G
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_MODELS=qwen2.5,llama3
+      - CUDA_VISIBLE_DEVICES=0
+      - OLLAMA_GPU_LAYERS=14
+      - OLLAMA_CUDA_MEMORY_LIMIT=3584
+    entrypoint: ["/bin/sh", "/ollama-init.sh"]
+    networks:
+      - AIBotNetwork
+      
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: AIServer
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    volumes:
+      - ./api:/app
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+    command: >
+      bash -c "
+        mkdir -p /app/logs && 
+        touch /app/logs/app.log &&
+        echo 'Waiting for Ollama service to initialize...' &&
+        sleep 10 &&
+        echo 'Starting API server...' &&
+        uvicorn api:app --host 0.0.0.0 --port 8000 --log-level debug
+      "
+    networks:
+      - AIBotNetwork
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+      
+  telegram_bot:
+    build:
+      context: ./bot/telegram
+      dockerfile: Dockerfile
+    container_name: AITelegramBot
+    restart: always
+    volumes:
+      - ./bot/telegram:/app
+      - ./configs:/app/configs
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - AIBotNetwork
+    command: >
+      bash -c "
+        echo 'Waiting for API server to be ready...' &&
+        sleep 10 &&
+        echo 'Starting Telegram bot...' &&
+        python -m main
+      "
 
 networks:
-  QwenBotNetwork:
+  AIBotNetwork:
     driver: bridge
 
 volumes:
   postgres_data:
   pgadmin_data:
+  ollama_data:
