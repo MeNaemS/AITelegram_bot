@@ -12,7 +12,7 @@ async def chat(request: SendRequests, message: Message) -> str:
             '/api/ask_bot',
             {
                 'model': {
-                    'name': 'llama3' if '@llama3' in user_message else 'qwen2.5'
+                    'name': 'qwen2.5' if '@qwen2.5' in user_message else 'llama3'
                 },
                 'message_data': {
                     'content': user_message,

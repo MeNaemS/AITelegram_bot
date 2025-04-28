@@ -10,18 +10,18 @@ from services.bot_integration import service_ask_bot
 async def depends_ask_bot(
     request: Request,
     user: Annotated[UserInDB, Depends(current_user)],
-    model: Model,
     message_data: ClientMessage,
     telegram_parameters: TelegramParameters,
+    model: Optional[Model] = None,
     chat_parameters: Optional[ChatParameters] = None
 ) -> ChatResponse:
     return await service_ask_bot(
         user,
         request.state.db_connection,
         request.state.session,
-        model,
         message_data,
         telegram_parameters,
         chat_parameters,
-        request.state.settings.api.ai.models
+        request.state.settings.api.ai.models,
+        model
     )
